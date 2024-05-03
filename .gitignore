@@ -5,3 +5,14 @@ ark_data
 !ark_data/ShooterGame/Saved/Config/WindowsServer/GameUserSettings.ini
 ark_backup
 !ark_backup/.gitkeep
+.bash*
+.cache
+.config
+.gitconfig
+.lesshst
+.local
+.profile
+.ssh
+.sudo_as_admin_successful
+.viminfo
+

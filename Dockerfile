@@ -24,11 +24,11 @@
 FROM        debian:bullseye-slim
 
 # Arguments defining arkuser's uid and gid
-ARG         PUID
-ARG         PGID
+#ARG         PUID
+#ARG         PGID
 
 # Use users group for unraid
-RUN         groupadd -g $PGID arkuser && useradd -d /home/arkuser -u $PUID -g $PGID -G users -m arkuser
+#RUN         groupadd -g $PGID arkuser && useradd -d /home/arkuser -u $PUID -g $PGID -G users -m arkuser
 RUN         mkdir /opt/arkserver
 
 RUN         set -ex; \
@@ -63,21 +63,23 @@ RUN         set -ex; \
             mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/
 
 # Install tini
-ARG         TINI_VERSION
-ADD         https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+#ARG         TINI_VERSION
+ADD         https://github.com/krallin/tini/releases/download/v0.19.0/tini /tini
 RUN         chmod +x /tini
 
 # Set permissions
-RUN         set -ex; \
-            chown -R arkuser:arkuser /opt/arkserver; \
-            chown -R arkuser:arkuser /opt/steamcmd
+#RUN         set -ex; \
+#            chown -R arkuser:arkuser /opt/arkserver; \
+#            chown -R arkuser:arkuser /opt/steamcmd
 
-COPY --chown=arkuser --chmod=755 ./scripts/start.sh /opt/start.sh
-COPY --chown=arkuser --chmod=755 ./scripts/manager /opt/manager
+COPY --chmod=755 ./scripts/start.sh /opt/start.sh
+COPY --chmod=755 ./scripts/manager /opt/manager
+#COPY --chown=arkuser --chmod=755 ./scripts/start.sh /opt/start.sh
+#COPY --chown=arkuser --chmod=755 ./scripts/manager /opt/manager
 
 RUN         ln -s /opt/manager/manager.sh /usr/local/bin/manager
 
-USER        arkuser
+#USER        arkuser
 WORKDIR     /opt/arkserver/
 
 #on startup enter start.sh script

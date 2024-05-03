@@ -3,9 +3,6 @@
 #exit on error
 set -e
 
-# Create steam directory and set environment variables
-mkdir -p "${STEAM_COMPAT_DATA_PATH}"
-
 # Install or update ASA server + verify installation
 /opt/steamcmd/steamcmd.sh +force_install_dir /opt/arkserver +login anonymous +app_update ${ASA_APPID} validate +quit
 
@@ -20,7 +17,7 @@ mkdir -p "${LOG_FILE%/*}" && echo "" > "${LOG_FILE}"
 
 # Start server through manager
 echo "" > "${PID_FILE}"
-manager start &
+#manager start &
 
 # Register SIGTERM handler to stop server gracefully
 trap "manager stop --saveworld" SIGTERM

@@ -45,10 +45,10 @@ full_status_setup() {
 }
 
 full_status_first_run() {
-    read -p "To display the full status, the EOS API credentials will have to be extracted from the server binary files and pdb-sym2addr-rs (azixus/pdb-sym2addr-rs) will be downloaded. Do you want to proceed [y/n]?: " -n 1 -r
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        return 1
-    fi
+    #read -p "To display the full status, the EOS API credentials will have to be extracted from the server binary files and pdb-sym2addr-rs (azixus/pdb-sym2addr-rs) will be downloaded. Do you want to proceed [y/n]?: " -n 1 -r
+    #if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    #    return 1
+    #fi
 
     full_status_setup
     return $?
@@ -192,16 +192,27 @@ start() {
         return
     fi    
 
-    echo "Starting server on port ${SERVER_PORT}"
+    echo -n "Starting server on port ${SERVER_PORT} ."
     echo "-------- STARTING SERVER --------" >> $LOG_FILE
 
     # Start server in the background + nohup and save PID
+    # TODO logging
     nohup /opt/manager/manager_server_start.sh >/dev/null 2>&1 &
-    ark_pid=$!
-    echo "$ark_pid" > $PID_FILE
     sleep 3
+    ark_pid=$(pgrep GameThread)
+    echo "$ark_pid" > $PID_FILE
 
-    echo "Server should be up in a few minutes"
+    sleep 10
+    echo -n '.'
+    while [[ $(status) =~ 'down' ]] ; do
+        echo -n '.'
+    done
+    for i in 1 2 3 ; do
+        echo -n '.'
+        sleep 10
+    done
+    echo
+    status --full
 }
 
 stop() {
@@ -212,7 +223,7 @@ stop() {
         return
     fi    
 
-    if [[ $1 == "--saveworld" ]]; then
+    if [[ $1 != "--nosaveworld" ]]; then
         saveworld
     fi
 
@@ -224,21 +235,23 @@ stop() {
     res=$?
     force=false
     if [[ $res == 0  && "$out" == "Exiting..." ]]; then
-        echo "Waiting ${SERVER_SHUTDOWN_TIMEOUT}s for the server to stop"
+        echo -n "Waiting ${SERVER_SHUTDOWN_TIMEOUT}s for the server to stop..."
         timeout $SERVER_SHUTDOWN_TIMEOUT tail --pid=$ark_pid -f /dev/null
         res=$?
 
         # Timeout occurred
         if [[ "$res" == 124 ]]; then
-            echo "Server still running after $SERVER_SHUTDOWN_TIMEOUT seconds"
+            echo "still running"
             force=true
+        else
+	    echo "" 
         fi
     else
         force=true
     fi
 
     if [[ "$force" == true ]]; then
-        echo "Forcing server shutdown"
+        echo -n "Forcing server shutdown..."
         kill -INT $ark_pid
 
         timeout $SERVER_SHUTDOWN_TIMEOUT tail --pid=$ark_pid -f /dev/null
@@ -267,7 +280,7 @@ saveworld() {
         return
     fi    
 
-    echo "Saving world..."
+    echo -n "Saving world..."
     out=$(${RCON_CMDLINE[@]} SaveWorld 2>/dev/null)
     res=$?
     if [[ $res == 0 && "$out" == "World Saved" ]]; then
@@ -315,7 +328,7 @@ backup(){
 
     res=$?
     if [[ $res == 0 ]]; then
-        echo "BACKUP CREATED" >> $LOG_FILE
+        echo "-------- BACKUP CREATED --------" >> $LOG_FILE
     else
         echo "creating backup failed"
     fi
