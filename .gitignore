@@ -7,7 +7,8 @@ ark_backup
 !ark_backup/.gitkeep
 .bash*
 .cache
-.config
+.config/cni
+.config/systemd/user/*.wants/
 .gitconfig
 .lesshst
 .local
