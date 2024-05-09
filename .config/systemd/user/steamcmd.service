@@ -21,7 +21,7 @@ ExecStart=/usr/bin/podman run \
   -v server_data:/opt/server:z \
   --env-file ${HOME}/env \
   --env 'NOTIFY_SOCKET' \
-  steamcmd 
+  kafka/steamcmd
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
 Type=notify

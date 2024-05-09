@@ -12,10 +12,13 @@ if [[ -n "${ARK_REDUCE_STORAGE_SIZE}" ]]; then
     rm -rf /opt/server/ShooterGame/Content/Movies/
 fi
 
-# when running as systemd then notify when ready
-if [[ -n $NOTIFY_SOCKET ]] ; then
+# just update if any arg is given
+if [[ -z $1 ]] ; then
+  # when running as systemd then notify when ready
+  if [[ -n $NOTIFY_SOCKET ]] ; then
     systemd-notify --ready --status "Steam is ready..."
-fi
+  fi
 
-trap : TERM INT 
-sleep infinity & wait
+  trap : TERM INT
+  sleep infinity & wait
+fi

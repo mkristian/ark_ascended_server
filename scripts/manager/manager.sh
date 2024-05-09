@@ -303,23 +303,6 @@ custom_rcon() {
     echo "$out"
 }
 
-update() {
-    echo TODO
-    exit 123321
-    echo "Updating ARK Ascended Server"
-    
-    stop --saveworld
-    /opt/steamcmd/steamcmd.sh +force_install_dir /opt/arkserver +login anonymous +app_update ${ASA_APPID} +quit
-    # Remove unnecessary files (saves 6.4GB.., that will be re-downloaded next update)
-    if [[ -n "${REDUCE_IMAGE_SIZE}" ]]; then 
-        rm -rf /opt/arkserver/ShooterGame/Binaries/Win64/ArkAscendedServer.pdb
-        rm -rf /opt/arkserver/ShooterGame/Content/Movies/
-    fi
-
-    echo "Update completed"
-    start
-}
-
 backup(){
     echo "Creating backup. Backups are saved in your ./ark_backup volume."
     # saving before creating the backup
@@ -338,7 +321,7 @@ backup(){
 }
 
 restoreBackup(){
-    backup_count=$(ls /var/backups/asa-server/ | wc -l)
+    backup_count=$(ls /var/backups/arkserver/${SESSION_NAME}/${SERVER_MAP} | wc -l)
     if [[ $backup_count > 0 ]]; then
         echo "Stopping the server."
         stop
@@ -379,8 +362,8 @@ main() {
         "rcon")
             custom_rcon "${@:2:99}"
             ;;
-        "update") 
-            update
+        "help")
+            echo "Supported actions: status, start, stop, restart, saveworld, rcon, update, backup, restore."
             ;;
         "backup")
             backup
@@ -389,7 +372,7 @@ main() {
             restoreBackup
             ;;
         *)
-            echo "Invalid action. Supported actions: status, start, stop, restart, saveworld, rcon, update, backup, restore."
+            echo "Invalid action. Supported actions: help, status, start, stop, restart, saveworld, rcon, update, backup, restore."
             exit 1
             ;;
     esac

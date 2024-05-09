@@ -20,6 +20,7 @@ ExecStart=/usr/bin/podman run \
   -v steam_data:/opt/steamcmd:z \
   -v shared_cluster:/opt/cluster:z \
   -v server_data:/opt/arkserver:z \
+  -v ${HOME}/ark_backup:/var/backups/arkserver \
   -v ${HOME}/ScorchedEarth/ShooterGame/Saved/Config/WindowsServer:/opt/arkserver/ShooterGame/Saved/Config/WindowsServer:O \
   --env-file ${HOME}/env \
   --env-file ${HOME}/ScorchedEarth/env \

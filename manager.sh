@@ -12,6 +12,25 @@ if [[ -z $1 ]] ; then
   exit 1
 fi
 
+if [[ $1 == 'update' ]] ; then
+  for s in $all ; do
+    echo "---"
+    echo "Stopping $s"
+    echo "---"
+    podman exec -t $s manager stop
+  done
+  echo "---"
+  echo "Updating application via steamcmd"
+  podman exec -t steamcmd /opt/steam.sh update
+  for s in $all ; do
+    echo "---"
+    echo "Starting $s"
+    echo "---"
+    podman exec -t $s manager start
+  done
+  exit 0
+fi
+
 container=$1
 shift
 
@@ -21,4 +40,4 @@ if [[ -z "$1" ]] ; then
   exit 0
 fi
 
-podman exec -t $container manager "${@}"
+podman exec -it $container manager "${@}"
