@@ -52,13 +52,26 @@ systemctl --user enable scorched_earth.service
 Customize the configurations of the services
 
 - common environment: [env](env)
-- the island: TheIsland/env
-- scorched earth: ScorchedEarth/env
+- the island: [TheIsland/env](TheIsland/env)
+- scorched earth: [ScorchedEarth/env](ScorchedEarth/env)
 
 important is to ensure the different ports. See the diff
 ```bash
 diff TheIsland/env ScorchedEarth/env
 ```
+
+Now start the steamcmd service
+```bash
+systemctl --user start steamcmd.service
+```
+and then either one or both ARK servers
+```bash
+systemctl --user start the_island.service
+systemctl --user start scorched_earth.service
+```
+
+Do to the `loginctl enable-linger $USER` the services stay as they are now after reboot !
+
 
 # FROM HERE ONWARDS ITS NEEDS A BIG REVIEW/REWRITE
 
