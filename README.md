@@ -51,7 +51,7 @@ systemctl --user enable scorched_earth.service
 
 Customize the configurations of the services
 
-- common environment: env
+- common environment: [env](env)
 - the island: TheIsland/env
 - scorched earth: ScorchedEarth/env
 
