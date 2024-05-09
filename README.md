@@ -32,14 +32,14 @@ podman build . -f Dockerfile.steamcmd -t kafka/steamcmd
 podman build . -f Dockerfile.arkserver -t kafka/arkserver
 ```
 
-Ensure container remains as they are after reboot. Assuming `arkserver` user.
+Ensure container remains as they are after reboot.
 ```bash
 loginctl enable-linger $USER 
 ```
 
 Checkout this repository
 ```bash
-git clone https://github.com/mkristian/ARK_Ascended_Docker.git $HOME
+git clone https://github.com/mkristian/ark_ascended_server.git $HOME
 ```
 
 Setup the docker container as services
@@ -50,9 +50,11 @@ systemctl --user enable scorched_earth.service
 ```
 
 Customize the configurations of the services
-- common ENV: env
+
+- common environment: env
 - the island: TheIsland/env
 - scorched earth: ScorchedEarth/env
+
 important is to ensure the different ports. See the diff
 ```bash
 diff TheIsland/env ScorchedEarth/env
