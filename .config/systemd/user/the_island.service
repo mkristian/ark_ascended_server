@@ -1,5 +1,5 @@
 [Unit]
-Description=Podman steamcmd service downloads given app (APPID)
+Description=Podman ARK ASA TheIsland service
 Documentation=man:podman-generate-systemd(1)
 Wants=network-online.target
 After=network-online.target
@@ -7,20 +7,23 @@ RequiresMountsFor=%t/containers
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
-Restart=on-failure
+Restart=always
 TimeoutStopSec=70
 ExecStartPre=/bin/rm -f %t/%n.ctr-id
 ExecStart=/usr/bin/podman run \
   --cidfile=%t/%n.ctr-id \
   --cgroups=no-conmon \
+  --name=asa_the_island \
+  --network=host \
   --replace \
-  --detach \
-  --name=steamcmd \
   -v steam_data:/opt/steamcmd:z \
-  -v server_data:/opt/server:z \
+  -v shared_cluster:/opt/cluster:z \
+  -v server_data:/opt/arkserver:z\
+  -v ${HOME}/TheIsland/ShooterGame/Saved/Config/WindowsServer:/opt/arkserver/ShooterGame/Saved/Config/WindowsServer:O \
   --env-file ${HOME}/env \
+  --env-file ${HOME}/TheIsland/env \
   --env 'NOTIFY_SOCKET' \
-  steamcmd 
+  asa
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
 Type=notify

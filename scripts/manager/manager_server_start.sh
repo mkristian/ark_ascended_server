@@ -39,6 +39,11 @@ if [ -n "${MAX_PLAYERS}" ]; then
     ark_flags="${ark_flags} -WinLiveMaxPlayers=${MAX_PLAYERS}"
 fi
 
+if [ -n "${CLUSTER_ID}" ]; then
+    CLUSTER_ID=$(eval echo "$CLUSTER_ID")
+    ark_flags="${ark_flags} -clusterID=${CLUSTER_ID} -ClusterDirOverride=/opt/cluster"
+fi
+
 ark_flags="${ark_flags} ${ARK_EXTRA_DASH_OPTS}"
 
 #fix for docker compose exec / docker exec parsing inconsistencies

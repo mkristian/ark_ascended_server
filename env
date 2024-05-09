@@ -1,0 +1,34 @@
+#APPID should only be changed if Wildcard provides a new one
+APPID=2430930
+
+SESSION_NAME=DrachenASA
+# comment out if there should be no cluster
+CLUSTER_ID=${SESSION_NAME}
+MAX_PLAYERS=10
+SERVER_SHUTDOWN_TIMEOUT=30
+
+# Comment to disable password
+#SERVER_PASSWORD=xx
+ARK_ADMIN_PASSWORD=aa
+
+# Comment to enable BattlEye
+DISABLE_BATTLEYE=1
+
+# Mods: Please provide a comma seperated list of the curse-forge modIDs and uncomment the MODS arg
+# e.g. MODS=931872,931338
+# MODS=
+
+# Extra arguments
+ARK_EXTRA_OPTS=?ServerCrosshair=true?OverrideStructurePlatformPrevention=true?OverrideOfficialDifficulty=5.0?ShowFloatingDamageText=true?AllowFlyerCarryPvE=true
+ARK_EXTRA_DASH_OPTS=-ForceAllowCaveFlyers -ForceRespawnDinos -AllowRaidDinoFeeding=true -ActiveEvent=Summer
+
+# Uncomment to remove unnecessary files to reduce image size
+# REDUCE_IMAGE_SIZE=1
+
+# Various files
+LOG_FILE=/opt/arkserver/ShooterGame/Saved/Logs/ShooterGame.log
+PID_FILE=/var/run/ark_server.pid
+
+STEAM_COMPAT_CLIENT_INSTALL_PATH=/opt/arkserver/.steam/steam
+STEAM_COMPAT_DATA_PATH=/opt/arkserver/steamapps/compatdata/${APPID}
+

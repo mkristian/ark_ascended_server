@@ -16,4 +16,4 @@ ark_backup
 .ssh
 .sudo_as_admin_successful
 .viminfo
-
+.vim

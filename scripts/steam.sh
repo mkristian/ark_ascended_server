@@ -3,7 +3,6 @@
 # Exit on error
 set -e
 
-
 # Install or update ASA server + verify installation
 /opt/steamcmd/steamcmd.sh +force_install_dir /opt/server +login anonymous +app_update ${APPID} validate +quit
 

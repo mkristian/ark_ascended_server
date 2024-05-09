@@ -12,6 +12,52 @@ This project relies on GloriousEggroll's Proton-GE in order to run the ARK Survi
 - [Hypervisors](#hypervisors)
 
 <!-- TOC end -->
+### Setup
+
+The whole setup assumes that this get installed on linux machine and it also assumes
+that the git repository gets checkout into the home directory of a user. Best to setup
+a new user (arkuser) :for this
+
+```bash
+sudo adduser arkserver
+sudo su - arkserver # switch to this new user
+```
+
+Build the docker images (using podman)
+```bash
+podman build . -f Dockerfile.steamcmd -t kafka/steamcmd
+podman build . -f Dockerfile.arkserver -t kafka/arkserver
+```
+
+Ensure container remains as they are after reboot. Assuming `arkserver` user.
+```bash
+loginctl enable-linger $USER 
+```
+
+Checkout this repository
+```bash
+cd
+cd ../
+git clone https://github.com/mkristian/ARK_Ascended_Docker.git $USER 
+```
+
+Setup the docker container as services
+```bash
+systemctl --user enable steamcmd.service
+systemctl --user enable the_island.service
+systemctl --user enable scorched_earth.service
+```
+
+Customize the configurations of the services
+- common ENV: env
+- the island: TheIsland/env
+- scorched earth: ScorchedEarth/env
+important is to ensure the different ports. See the diff
+```bash
+diff TheIsland/env ScorchedEarth/env
+```
+
+
 ### Usage
 Download the container by cloning the repo and setting permissions:
 ```bash

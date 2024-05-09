@@ -303,6 +303,8 @@ custom_rcon() {
 }
 
 update() {
+    echo TODO
+    exit 123321
     echo "Updating ARK Ascended Server"
     
     stop --saveworld
