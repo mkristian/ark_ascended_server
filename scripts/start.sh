@@ -4,11 +4,11 @@
 set -e
 
 #Create file for showing server logs
-mkdir -p "${LOG_FILE%/*}" && echo "" > "${LOG_FILE}"
+mkdir -p "${LOG_FILE%/*}" && touch "${LOG_FILE}"
 
 # Start server through manager
 echo "" > "${PID_FILE}"
-#manager start &
+manager start 
 
 # Register SIGTERM handler to stop server gracefully
 trap "manager stop --saveworld" SIGTERM
@@ -21,7 +21,7 @@ fi
 # Start tail process in the background, then wait for tail to finish.
 # This is just a hack to catch SIGTERM signals, tail does not forward
 # the signals.
-#tail -F "${LOG_FILE}" &
-#wait $!
+tail -F "${LOG_FILE}" &
+wait $!
 
-sleep infinity #& wait
+#sleep infinity #& wait

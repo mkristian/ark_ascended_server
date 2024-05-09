@@ -8,6 +8,7 @@ RequiresMountsFor=%t/containers
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=on-failure
+TimeoutStartSec=15min
 TimeoutStopSec=70
 ExecStartPre=/bin/rm -f %t/%n.ctr-id
 ExecStart=/usr/bin/podman run \
@@ -25,6 +26,9 @@ ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
 Type=notify
 NotifyAccess=all
+# TODO
+# Type=oneshot
+# RemainAfterExit=true
 
 [Install]
 WantedBy=default.target

@@ -1,13 +1,14 @@
 [Unit]
 Description=Podman ARK ASA ScorchedEarth service
 Documentation=man:podman-generate-systemd(1)
-Wants=network-online.target
-After=network-online.target
+Requires=steamcmd.service
+After=steamcmd.service
 RequiresMountsFor=%t/containers
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=always
+TimeoutStartSec=5m
 TimeoutStopSec=70
 ExecStartPre=/bin/rm -f %t/%n.ctr-id
 ExecStart=/usr/bin/podman run \
@@ -24,6 +25,7 @@ ExecStart=/usr/bin/podman run \
   --env-file ${HOME}/ScorchedEarth/env \
   --env 'NOTIFY_SOCKET' \
   kafka/arkserver
+ExecStop=/usr/bin/podman exec -t asa_scorched_earth manager stop
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
 Type=notify

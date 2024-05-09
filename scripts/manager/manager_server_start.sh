@@ -51,5 +51,5 @@ STEAM_COMPAT_DATA_PATH=$(eval echo "$STEAM_COMPAT_DATA_PATH")
 mkdir -p $STEAM_COMPAT_DATA_PATH
 
 #starting server and outputting log file
-# TODO logging
-proton run /opt/arkserver/ShooterGame/Binaries/Win64/ArkAscendedServer.exe ${cmd} ${ark_flags} #> /dev/null 2>&1
+echo "/opt/arkserver/ShooterGame/Binaries/Win64/ArkAscendedServer.exe ${cmd} ${ark_flags}" >> $LOG_FILE
+proton run /opt/arkserver/ShooterGame/Binaries/Win64/ArkAscendedServer.exe ${cmd} ${ark_flags} >> $LOG_FILE 2>&1

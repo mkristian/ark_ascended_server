@@ -1,13 +1,14 @@
 [Unit]
 Description=Podman ARK ASA TheIsland service
 Documentation=man:podman-generate-systemd(1)
-Wants=network-online.target
-After=network-online.target
+Requires=steamcmd.service
+After=steamcmd.service
 RequiresMountsFor=%t/containers
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=always
+TimeoutStartSec=5m
 TimeoutStopSec=70
 ExecStartPre=/bin/rm -f %t/%n.ctr-id
 ExecStart=/usr/bin/podman run \
@@ -18,12 +19,13 @@ ExecStart=/usr/bin/podman run \
   --replace \
   -v steam_data:/opt/steamcmd:z \
   -v shared_cluster:/opt/cluster:z \
-  -v server_data:/opt/arkserver:z\
+  -v server_data:/opt/arkserver:z \
   -v ${HOME}/TheIsland/ShooterGame/Saved/Config/WindowsServer:/opt/arkserver/ShooterGame/Saved/Config/WindowsServer:O \
   --env-file ${HOME}/env \
   --env-file ${HOME}/TheIsland/env \
   --env 'NOTIFY_SOCKET' \
-  asa
+  kafka/arkserver
+ExecStop=/usr/bin/podman exec -t asa_the_island manager stop
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
 Type=notify

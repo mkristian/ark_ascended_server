@@ -212,6 +212,7 @@ start() {
         sleep 10
     done
     echo
+    echo "-------- SERVER STARTED --------" >> $LOG_FILE
     status --full
 }
 

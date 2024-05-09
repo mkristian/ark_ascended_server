@@ -36,9 +36,7 @@ loginctl enable-linger $USER
 
 Checkout this repository
 ```bash
-cd
-cd ../
-git clone https://github.com/mkristian/ARK_Ascended_Docker.git $USER 
+git clone https://github.com/mkristian/ARK_Ascended_Docker.git $HOME
 ```
 
 Setup the docker container as services
