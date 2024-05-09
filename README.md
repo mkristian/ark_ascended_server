@@ -1,9 +1,12 @@
-# ARK Survival Ascended Docker Server
+# This is fork of [azixus/ARK_Ascended_Docker)](https://github.com/azixus/ARK_Ascended_Docker) which did the main development and this fork just puts it into systemd podman setup.
+
+# ARK Survival Ascended Docker Server using Podman
 
 This project relies on GloriousEggroll's Proton-GE in order to run the ARK Survival Ascended Server inside a docker container under Linux. This allows to run the ASA Windows server binaries on Linux easily.
 
 <!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
 ### Table of Contents
+- [Setup](#setup)
 - [Usage](#usage)
 - [Configuration](#configuration)
    * [Configuration variables](#configuration-variables)
@@ -57,6 +60,10 @@ diff TheIsland/env ScorchedEarth/env
 
 
 ### Usage
+
+# FROM HERE ONWARDS ITS NEEDS A BIG REVIEW/REWRITE
+
+
 Download the container by cloning the repo and setting permissions:
 ```bash
 $ git clone https://github.com/AziXus/ARK_Ascended_Docker.git
