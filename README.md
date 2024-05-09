@@ -1,4 +1,4 @@
-# This is fork of [azixus/ARK_Ascended_Docker)](https://github.com/azixus/ARK_Ascended_Docker) which did the main development and this fork just puts it into systemd podman setup.
+# This is fork of [azixus/ARK_Ascended_Docker](https://github.com/azixus/ARK_Ascended_Docker) which did the main development and this fork just puts it into systemd podman setup.
 
 # ARK Survival Ascended Docker Server using Podman
 
@@ -58,11 +58,28 @@ important is to ensure the different ports. See the diff
 diff TheIsland/env ScorchedEarth/env
 ```
 
-
-### Usage
-
 # FROM HERE ONWARDS ITS NEEDS A BIG REVIEW/REWRITE
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Usage
 
 Download the container by cloning the repo and setting permissions:
 ```bash
