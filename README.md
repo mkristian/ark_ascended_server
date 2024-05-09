@@ -18,8 +18,8 @@ This project relies on GloriousEggroll's Proton-GE in order to run the ARK Survi
 ### Setup
 
 The whole setup assumes that this get installed on linux machine and it also assumes
-that the git repository gets checkout into the home directory of a user. Best to setup
-a new user (arkuser) :for this
+that the git repository gets checked out into the home directory of a user. Best to setup
+a new user for this, ie using `arkuser` in this example
 
 ```bash
 sudo adduser arkserver
@@ -37,12 +37,12 @@ Ensure container remains as they are after reboot.
 loginctl enable-linger $USER 
 ```
 
-Checkout this repository
+Checkout this repository into the home directory of the current user
 ```bash
 git clone https://github.com/mkristian/ark_ascended_server.git $HOME
 ```
 
-Setup the docker container as services
+Setup the docker container as services (needs the checkout into the home directory to work like this)
 ```bash
 systemctl --user enable steamcmd.service
 systemctl --user enable the_island.service
@@ -55,7 +55,7 @@ Customize the configurations of the services
 - the island: [TheIsland/env](TheIsland/env)
 - scorched earth: [ScorchedEarth/env](ScorchedEarth/env)
 
-important is to ensure the different ports. See the diff
+It is important to ensure the different ports for each server. See the diff
 ```bash
 diff TheIsland/env ScorchedEarth/env
 ```
@@ -70,7 +70,7 @@ systemctl --user start the_island.service
 systemctl --user start scorched_earth.service
 ```
 
-Do to the `loginctl enable-linger $USER` the services stay as they are now after reboot !
+Due to the `loginctl enable-linger $USER` the services stay as they are now after a reboot !
 
 
 # FROM HERE ONWARDS ITS NEEDS A BIG REVIEW/REWRITE
