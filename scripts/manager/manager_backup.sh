@@ -1,10 +1,11 @@
 #!/bin/bash
 set -e
 # create backup folder if it not already exists
-path="/var/backups/arkserver/${SESSION_NAME}/${SERVER_MAP}"
+path="/var/backups/arkserver/${SESSION_NAME// /_}/${SERVER_MAP}"
 copyPath="/opt/arkserver/tmp/backup"
 
 mkdir -p $path
+rm -rf $copyPath
 mkdir -p $copyPath
 
 archive_name=$(date +"%Y-%m-%d_%H-%M-%S")
@@ -24,7 +25,7 @@ tar -cvzf $path/backup_${archive_name}.tar.gz -C $copyPath Saved
 rm -R $copyPath/*
 # count and output existing backups
 
-count=$(ls -1 $path | wc -l)
+count=$(ls -1 $path/backup* | wc -l)
 
 echo "Number of backups in path: ${count}"
 echo "Size of Backup folder: $(du -hs $path)"

@@ -2,7 +2,7 @@
 set -e
 i=1
 echo "Here is a list of all your backup archives: "
-path="/var/backups/arkserver/${SESSION_NAME}/${SERVER_MAP}"
+path="/var/backups/arkserver/${SESSION_NAME// /_}/${SERVER_MAP}"
 # list all files with a counter
 for datei in $(ls $path); do
    echo "$i - - - - - File: $datei"

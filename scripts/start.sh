@@ -8,10 +8,10 @@ mkdir -p "${LOG_FILE%/*}" && touch "${LOG_FILE}"
 
 # Start server through manager
 echo "" > "${PID_FILE}"
-manager start 
+manager resume
 
 # Register SIGTERM handler to stop server gracefully
-trap "manager stop --saveworld" SIGTERM
+trap "manager halt --saveworld" SIGTERM
 
 # On systemd notify service is ready
 if [[ -n $NOTIFY_SOCKET ]] ; then

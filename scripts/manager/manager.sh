@@ -1,6 +1,10 @@
 #!/bin/bash
 RCON_CMDLINE=( rcon -a 127.0.0.1:${RCON_PORT} -p ${ARK_ADMIN_PASSWORD} )
 EOS_FILE=/opt/manager/.eos.config
+SESSION_NAME=$(eval echo "$SESSION_NAME")
+path="/var/backups/arkserver/${SESSION_NAME// /_}/${SERVER_MAP}"
+state=$path/running
+mkdir -p $path
 
 get_and_check_pid() {
     # Get PID
@@ -285,6 +289,7 @@ saveworld() {
     out=$(${RCON_CMDLINE[@]} SaveWorld 2>/dev/null)
     res=$?
     if [[ $res == 0 && "$out" == "World Saved" ]]; then
+        echo "-------- SAVED WORLD --------" >> $LOG_FILE
         echo "Success!"
     else
         echo "Failed."
@@ -321,7 +326,7 @@ backup(){
 }
 
 restoreBackup(){
-    backup_count=$(ls /var/backups/arkserver/${SESSION_NAME}/${SERVER_MAP} | wc -l)
+    backup_count=$(ls -1 /var/backups/arkserver/${SESSION_NAME// /_}/${SERVER_MAP}/backup* | wc -l)
     if [[ $backup_count > 0 ]]; then
         echo "Stopping the server."
         stop
@@ -344,14 +349,26 @@ main() {
     option="$2"
 
     case "$action" in
+	"resume")
+            if [[ -f $state ]] ; then
+              echo "-------- RESUMING PREVIOUS SERVER STATE --------" >> $LOG_FILE
+              start
+            fi 
+            ;;
         "status")
             status "$option"
             ;;
         "start")
             start
+	    touch $state
+            ;;
+        "halt")
+            echo "-------- HALTING SERVER, KEEP STATE --------" >> $LOG_FILE
+            stop "$option"
             ;;
         "stop")
             stop "$option"
+	    rm -f $state
             ;;
         "restart")
             restart "$option"
