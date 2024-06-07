@@ -21,7 +21,7 @@ ExecStart=/usr/bin/podman run \
   -v shared_cluster:/opt/cluster:z \
   -v server_data:/opt/arkserver:z \
   -v ${HOME}/ark_backup:/var/backups/arkserver \
-  -v ${HOME}/ScorchedEarth/ShooterGame/Saved/Config/WindowsServer:/opt/arkserver/ShooterGame/Saved/Config/WindowsServer:O \
+  -v ${HOME}/ScorchedEarth/ShooterGame/Saved/Config/WindowsServer:/opt/arkserver/ShooterGame/Saved/Config/WindowsServer \
   --env-file ${HOME}/env \
   --env-file ${HOME}/ScorchedEarth/env \
   --env 'NOTIFY_SOCKET' \
