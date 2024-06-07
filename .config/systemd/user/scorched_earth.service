@@ -14,19 +14,19 @@ ExecStartPre=/bin/rm -f %t/%n.ctr-id
 ExecStart=/usr/bin/podman run \
   --cidfile=%t/%n.ctr-id \
   --cgroups=no-conmon \
-  --name=asa_scorched_earth \
+  --name=scorched_earth \
   --network=host \
   --replace \
   -v steam_data:/opt/steamcmd:z \
   -v shared_cluster:/opt/cluster:z \
   -v server_data:/opt/arkserver:z \
   -v ${HOME}/ark_backup:/var/backups/arkserver \
-  -v ${HOME}/ScorchedEarth/ShooterGame/Saved/Config/WindowsServer:/opt/arkserver/ShooterGame/Saved/Config/WindowsServer \
-  --env-file ${HOME}/env \
-  --env-file ${HOME}/ScorchedEarth/env \
+  -v ${HOME}/maps/scorched_earth/ShooterGame/Saved/Config/WindowsServer:/opt/arkserver/ShooterGame/Saved/Config/WindowsServer \
+  --env-file ${HOME}/maps/env \
+  --env-file ${HOME}/maps/scorched_earth/env \
   --env 'NOTIFY_SOCKET' \
   kafka/arkserver
-ExecStop=/usr/bin/podman exec -t asa_scorched_earth manager halt
+ExecStop=/usr/bin/podman exec -t scorched_earth manager halt
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
 Type=notify
