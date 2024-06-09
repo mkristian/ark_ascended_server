@@ -3,7 +3,7 @@ set -e #uo pipefail
 
 script_dir="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
-all=$(podman ps | grep asa_ | sed s/.*asa_/asa_/)
+all=$(ls -d1 -I  maps/* | sed 's/maps.//' | xargs echo)
 
 if [[ -z $1 ]] ; then
   echo "usage: $0 <service name> [command]"
