@@ -19,7 +19,7 @@ ExecStart=/usr/bin/podman run \
   --name=steamcmd \
   -v steam_data:/opt/steamcmd:z \
   -v server_data:/opt/server:z \
-  --env-file ${HOME}/env \
+  --env-file ${HOME}/maps/env \
   --env 'NOTIFY_SOCKET' \
   kafka/steamcmd
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
