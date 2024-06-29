@@ -17,7 +17,7 @@ ExecStart=/usr/bin/podman run \
   --name=the_island \
   --network=host \
   --replace \
-  -v steam_data:/opt/steamcmd:z \
+# -v steam_data:/opt/steamcmd:z \
   -v shared_cluster:/opt/cluster:z \
   -v server_data:/opt/arkserver:z \
   -v ${HOME}/ark_backup:/var/backups/arkserver \
