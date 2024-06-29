@@ -41,6 +41,6 @@ RUN         chmod +x /tini
 # Setup startup
 COPY --chmod=755 ./scripts/steam.sh /opt/steam.sh
 
-WORKDIR     /opt/arkserver/
+WORKDIR     /opt
 
 ENTRYPOINT ["/tini", "--", "/opt/steam.sh"]
