@@ -50,6 +50,11 @@ fi
 
 case $1 in
 
+  backup)
+    all_pods Backup backup
+    exit 0
+    ;;
+
   update)
     all_pods Halting halt
     podman exec -t steamcmd /opt/steam.sh update
