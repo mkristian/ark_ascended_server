@@ -3,6 +3,8 @@ APPID=2430930
 
 # comment out if there should be no cluster
 CLUSTER_ID=Drachen
+MAP_NAME=${SERVER_MAP/_WP}
+SESSION_NAME="${CLUSTER_ID} ${MAP_NAME}"
 MAX_PLAYERS=10
 SERVER_SHUTDOWN_TIMEOUT=30
 

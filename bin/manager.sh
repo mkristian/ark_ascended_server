@@ -37,7 +37,7 @@ map() {
 manager() {
   local map=$1
   local cmd=$2
-  echo -e "${cmd/s/S} $_Y$map$__ cluster $_B$CLUSTER_ID$__"
+  echo -e "$_B$CLUSTER_ID$__ $_Y$map$__ $cmd"
   podman exec -t $map manager $cmd
 }
 
@@ -57,12 +57,15 @@ for_all_maps() {
         start|status|stop)
           manager $map $cmd &
           ;;
+        details)
+          manager $map status --full &
+          ;;
         show)
-          echo -e "Part of $_Y$map$__ cluster $_B$CLUSTER_ID$__"
+          echo -e "$_B$CLUSTER_ID$__ $_Y$map$__ added to cluster"
           ;;
       esac
     else
-      echo -e "${__}Skip $_Y$map$__ - not part of the cluster $_B$CLUSTER_ID$__" 
+      echo -e "$_B$CLUSTER_ID$__ $_Y$map$__ not in cluster - skipping"
     fi
   done
   wait
@@ -83,8 +86,13 @@ cmdlist_w_args() {
 all_services() {
   local cmd=$1
   for map in $all; do
-    echo -e "$cmd $_Y$map$__ cluster $_B$CLUSTER_ID$__"
-    systemctl --user $cmd $map --no-pager &
+      echo -e "$_B$CLUSTER_ID$__ $_Y$map$__ $cmd container"
+      if [[ 'status' == $cmd ]]
+      then
+	  systemctl --user $cmd $map --no-pager
+      else
+	  systemctl --user $cmd $map --no-pager &
+      fi
   done
   wait
 }
@@ -104,9 +112,7 @@ then
     for_all_maps start 
   elif [[ $cmd == 'reconfigure' ]]
   then
-	  echo asd
     all_services restart
-	  echo asd
     all_services status
   else
     for_all_maps $cmd
@@ -119,23 +125,23 @@ else
       map "$map"
       if [[ -f "$clusterflag" ]]
       then
-        echo -e "$_Y$map$__ is already part of the cluster $_B$CLUSTER_ID$__"
+        echo -e "$_B$CLUSTER_ID$__ $_Y$map$__ is already part of the cluster"
         exit
       fi
       touch $clusterflag
-      echo -e "added $_Y$map$__ to cluster $_B$CLUSTER_ID$__"
+      echo -e "$_B$CLUSTER_ID$__ $_Y$map$__ added to cluster"
       manager $map start
       ;;
 
-    remove)
+    remove)d
       map "$map"
       if [[ ! -f "$clusterflag" ]]
       then
-        echo -e "$_Y$map$__ is already gone from cluster $_B$CLUSTER_ID$__"
+        echo -e "$_B$CLUSTER_ID$__ $_Y$map$__ is already gone from cluster"
         exit
       fi
       rm $clusterflag
-      echo -e "removed $_Y$map$__ from cluster $_B$CLUSTER_ID$__"
+      echo -e "$_B$CLUSTER_ID$__ $_Y$map$__ removed from cluster"
       manager $map stop
       ;;
     saveworld)

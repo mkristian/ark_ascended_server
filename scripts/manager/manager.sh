@@ -1,6 +1,18 @@
 #!/bin/bash
+
+_B="\033[0;1;30m"
+_R="\033[0;1;31m"
+_G="\033[0;1;32m"
+_Y="\033[0;1;33m"
+_B="\033[0;1;34m"
+_P="\033[0;1;35m"
+_C="\033[0;1;36m"
+_W="\033[0;1;37m"
+__="\033[0m"
+
 RCON_CMDLINE=( rcon -a 127.0.0.1:${RCON_PORT} -p ${ARK_ADMIN_PASSWORD} )
 EOS_FILE=/opt/manager/.eos.config
+MAP_NAME=$(eval echo "$MAP_NAME")
 SESSION_NAME=$(eval echo "$SESSION_NAME")
 path="/var/backups/arkserver/${SESSION_NAME// /_}/${SERVER_MAP}"
 state=$path/running
@@ -126,14 +138,14 @@ full_status_display() {
         mods="-"
     fi
 
-    echo -e "Server Name:    ${serv_name}"
-    echo -e "Map:            ${map}"
-    echo -e "Day:            ${day}"
-    echo -e "Players:        ${curr_players} / ${max_players}"
-    echo -e "Mods:           ${mods}"
-    echo -e "Server Version: ${major}.${minor}"
-    echo -e "Server Address: ${ip}:${bind_port}"
-    echo "Server is up"
+    echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ Server Name:    ${serv_name}"
+    echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ Map:            ${map}"
+    echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ Day:            ${day}"
+    echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ Players:        ${curr_players} / ${max_players}"
+    echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ Mods:           ${mods}"
+    echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ Server Version: ${major}.${minor}"
+    #echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ Server Address: ${ip}:${bind_port}"
+    echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ is up"
 }
 
 status() {
@@ -154,19 +166,21 @@ status() {
 
     # Get server PID
     ark_pid=$(get_and_check_pid)
+    echo -ne "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ PID: "
     if [[ "$ark_pid" == 0 ]]; then
-        echo "Server PID not found (server offline?)"
+	echo "not found (server offline?)"
         return
     fi    
-    echo -e "Server PID:     ${ark_pid}"
+    echo -e "     ${ark_pid}"
 
     ark_port=$(ss -tupln | grep "GameThread" | grep -oP '(?<=:)\d+')
+    echo -ne "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ Port: "
     if [[ -z "$ark_port" ]]; then
-        echo -e "Server Port:    Not Listening"
+	echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ Not Listening"
         return
     fi
 
-    echo -e "Server Port:    ${ark_port}"
+    echo -e "    ${ark_port}"
 
     # Check initial status with rcon command
     out=$(${RCON_CMDLINE[@]} ListPlayers 2>/dev/null)
@@ -180,11 +194,11 @@ status() {
             if [[ "$out" != "No Players"* ]]; then
                 num_players=$(echo "$out" | wc -l)
             fi
-            echo -e "Players:        ${num_players} / ?"
-            echo "Server is up"
+            echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ Players:        ${num_players} / ?"
+            echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ is up"
         fi
     else
-        echo "Server is down"
+        echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ is down"
     fi
 }
 
@@ -192,11 +206,11 @@ start() {
     # Check server not already running
     ark_pid=$(get_and_check_pid)
     if [[ "$ark_pid" != 0 ]]; then
-        echo "Server is already running."
+        echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ is already running."
         return
     fi    
 
-    echo -n "Starting server on port ${SERVER_PORT} ."
+    echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ starting on port ${SERVER_PORT} ..."
     echo "-------- STARTING SERVER --------" >> $LOG_FILE
 
     # Start server in the background + nohup and save PID
@@ -207,12 +221,12 @@ start() {
     echo "$ark_pid" > $PID_FILE
 
     sleep 10
-    echo -n '.'
+    echo -n '.' >&2
     while [[ $(status) =~ 'down' ]] ; do
-        echo -n '.'
+        echo -n '.' >&2
     done
     for i in 1 2 3 ; do
-        echo -n '.'
+        echo -n '.' >&2
         sleep 10
     done
     echo
@@ -224,7 +238,7 @@ stop() {
     # Get server pid
     ark_pid=$(get_and_check_pid)
     if [[ "$ark_pid" == 0 ]]; then
-        echo "Server PID not found (server offline?)"
+        echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ PID not found (server offline?)"
         return
     fi    
 
@@ -232,7 +246,7 @@ stop() {
         saveworld
     fi
 
-    echo "Stopping server gracefully..."
+    echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ stopping gracefully..."
     echo "-------- STOPPING SERVER --------" >> $LOG_FILE
 
     # Check number of players
@@ -240,13 +254,13 @@ stop() {
     res=$?
     force=false
     if [[ $res == 0  && "$out" == "Exiting..." ]]; then
-        echo -n "Waiting ${SERVER_SHUTDOWN_TIMEOUT}s for the server to stop..."
+        echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ waiting ${SERVER_SHUTDOWN_TIMEOUT}s to stop..."
         timeout $SERVER_SHUTDOWN_TIMEOUT tail --pid=$ark_pid -f /dev/null
         res=$?
 
         # Timeout occurred
         if [[ "$res" == 124 ]]; then
-            echo "still running"
+            echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ still running"
             force=true
         else
 	    echo "" 
@@ -256,7 +270,7 @@ stop() {
     fi
 
     if [[ "$force" == true ]]; then
-        echo -n "Forcing server shutdown..."
+        echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ forcefully shutdown..."
         kill -INT $ark_pid
 
         timeout $SERVER_SHUTDOWN_TIMEOUT tail --pid=$ark_pid -f /dev/null
@@ -268,7 +282,7 @@ stop() {
     fi
 
     echo "" > $PID_FILE
-    echo "Done"
+    echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ stopped."
     echo "-------- SERVER STOPPED --------" >> $LOG_FILE
 }
 
@@ -281,18 +295,18 @@ saveworld() {
     # Get server pid
     ark_pid=$(get_and_check_pid)
     if [[ "$ark_pid" == 0 ]]; then
-        echo "Server PID not found (server offline?)"
+        echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ PID not found (server offline?)"
         return
     fi    
 
-    echo -n "Saving world..."
+    echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ saving world ..."
     out=$(${RCON_CMDLINE[@]} SaveWorld 2>/dev/null)
     res=$?
     if [[ $res == 0 && "$out" == "World Saved" ]]; then
         echo "-------- SAVED WORLD --------" >> $LOG_FILE
-        echo "Success!"
+        echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ world saved!"
     else
-        echo "Failed."
+        echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ failed saving world."
     fi
 }
 
@@ -300,7 +314,7 @@ custom_rcon() {
     # Get server pid
     ark_pid=$(get_and_check_pid)
     if [[ "$ark_pid" == 0 ]]; then
-        echo "Server PID not found (server offline?)"
+        echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ PID not found (server offline?)"
         return
     fi    
 
