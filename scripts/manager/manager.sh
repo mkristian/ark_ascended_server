@@ -20,7 +20,7 @@ mkdir -p $path
 
 get_and_check_pid() {
     # Get PID
-    ark_pid=$(cat "$PID_FILE" 2>/dev/null)
+    ark_pid=$(pgrep GameThread)
     if [[ -z "$ark_pid" ]]; then
         echo "0"
         return
@@ -216,11 +216,22 @@ start() {
     # Start server in the background + nohup and save PID
     # TODO logging
     nohup /opt/manager/manager_server_start.sh >/dev/null 2>&1 &
-    sleep 3
-    ark_pid=$(pgrep GameThread)
-    echo "$ark_pid" > $PID_FILE
+    echo -ne "$_C"
+    for i in $(seq 1 20)
+    do
+	sleep 1
+	echo -n '.' >&2
+	ark_pid=$(pgrep GameThread)
+	if [[ ! -z $ark_pid ]]
+	then
+	    break
+	fi
+    done
+    echo
+    echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ PID: $ark_pid"
 
     sleep 10
+    echo -ne "$_P"
     echo -n '.' >&2
     while [[ $(status) =~ 'down' ]] ; do
         echo -n '.' >&2
