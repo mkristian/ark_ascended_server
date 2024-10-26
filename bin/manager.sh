@@ -133,7 +133,7 @@ else
       manager $map start
       ;;
 
-    remove)d
+    remove)
       map "$map"
       if [[ ! -f "$clusterflag" ]]
       then

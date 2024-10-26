@@ -5,9 +5,12 @@ ark_data
 !ark_data/ShooterGame/Saved/Config/WindowsServer/GameUserSettings.ini
 ark_backup
 !ark_backup/.gitkeep
+.ansible
 .bash*
 .cache
 .config/cni
+.config/ark
+.config/containers
 .config/systemd/user/*.wants/
 .gitconfig
 .lesshst
