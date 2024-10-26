@@ -20,4 +20,5 @@ ark_backup
 .sudo_as_admin_successful
 .viminfo
 .vim
-*.ini
+*~
+ShooterGame
