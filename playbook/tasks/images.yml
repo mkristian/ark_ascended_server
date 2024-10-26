@@ -1,0 +1,38 @@
+---
+
+- name: Collect info on images
+  containers.podman.podman_image_info:
+    name:
+      - localhost/kafka/steamcmd2
+      - localhost/kafka/arkserver
+  ignore_errors: true
+  register: info
+
+- name: Pick created timestamps
+  ansible.builtin.set_fact:
+    first: "{{ info.images[0].Created | regex_replace('\\..*', '') | to_datetime('%Y-%m-%dT%H:%M:%S') }}"
+    second: "{{ info.images[1].Created | regex_replace('\\..*', '') | to_datetime('%Y-%m-%dT%H:%M:%S') }}"
+- debug:
+    msg: "-{{ (now() - (first if first < second else second) | to_datetime).seconds }} {{ first if first < second else second }}"
+- name: find modified files
+  ansible.builtin.find:
+    path: "{{ asa_images_dir }}"
+    age: "-{{ (now() - (first if first > second else second) | to_datetime).seconds }}"
+    recurse: true
+  register: files
+
+- name: build steamcmd image
+  containers.podman.podman_image:
+    name: kafka/steamcmd2
+    path: "{{ asa_images_dir }}"
+    force: "{{ files.files | length > 0 }}"
+    build:
+      file: Containerfile.steamcmd
+
+- name: build arkserver image
+  containers.podman.podman_image:
+    name: kafka/arkserver
+    path: "{{ asa_images_dir }}"
+    force: "{{ files.files | length > 0 }}"
+    build:
+      file: Containerfile.arkserver

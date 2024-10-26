@@ -1,0 +1,32 @@
+---
+
+asa_cluster_name: Drachen
+
+asa_max_player: 10
+
+# Comment to disable password
+#asa_server_password: xx
+asa_admin_password: aa
+
+asa_mods:
+  935408: "desc"
+
+asa_extra_opts:
+  - ServerCrosshair=true
+  - OverrideStructurePlatformPrevention=true
+  - OverrideOfficialDifficulty=5.0
+  - ShowFloatingDamageText=true
+  - AllowFlyerCarryPvE=true
+
+asa_extra_dash_opts:
+  - ForceAllowCaveFlyers
+  - ForceRespawnDinos
+  - AllowRaidDinoFeeding=true
+  - ActiveEvent=Summer
+
+asa_maps:
+  - map: TheIsland_WP
+  - map: thecenter_wp
+    name: TheCenter
+  - map: ScorchedEarth_WP
+  - map: Aberration_WP

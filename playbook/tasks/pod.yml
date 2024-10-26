@@ -1,0 +1,66 @@
+- name: Create ASA pod
+  containers.podman.podman_pod:
+    name: asa
+    state: quadlet
+    quadlet_options: |
+      [Unit]
+      Description=Ark ASA Cluster
+
+      [Service]
+      Restart=always
+
+      [Install]
+      WantedBy=default.target
+    network: host
+    volumes:
+      - steam2_data:/opt/steamcmd:z
+      - shared2_cluster:/opt/cluster:z
+      - server2_data:/opt/server:z
+  notify: Reload Pod
+
+- name: steamcmd container
+  containers.podman.podman_container:
+    name: steamcmd2
+    image: localhost/kafka/steamcmd2
+    state: quadlet
+    quadlet_options: | 
+      PodmanArgs=--env 'NOTIFY_SOCKET'
+      Notify=true
+      [Unit]
+      Description=Steam CMD
+    # TODO init_ctr: always
+    detach: true
+    env_file:
+      - "%h/maps/env"
+    pod: asa.pod
+  notify: Reload Pod
+
+- name: arkserver container {{ item }}
+  containers.podman.podman_container:
+    name: "{{ item.name | default(item.map) | regex_replace('_(WP|wp)', '') | regex_replace('([A-Z])', '_\\1') | regex_replace('^_', '') | lower }}2"
+    image: localhost/kafka/arkserver
+    state: quadlet
+    quadlet_options: |
+      [Unit]
+      Description=Ark ASA Server Map {{ item.name | default(item.map) | regex_replace('_(WP|wp)', '') }}
+      After=steamcmd2.service
+      Wants=steamcmd2.service
+    detach: true
+    env_file:
+      - "%h/{{ asa_config_path }}/image.env"
+      - "%h/{{ asa_config_path }}/maps.env"
+      - "%h/{{ asa_config_path }}/{{ item.name | default(item.map) | regex_replace('_(WP|wp)', '') | regex_replace('([A-Z])', '_\\1') | regex_replace('^_', '') | lower }}.env"
+    volumes:
+      - "%h/maps/the_island/ShooterGame/Saved/Config/WindowsServer:/opt/arkserver/ShooterGame/Saved/Config/WindowsServer"
+      - "%h/ark_backup:/var/backups/arkserver"
+    sdnotify: container
+    pod: asa.pod
+  notify: Reload Pod
+  loop: "{{ asa_maps }}"
+
+- name: ensure ark asa server started
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+    scope: user
+    state: started
+    name: asa-pod

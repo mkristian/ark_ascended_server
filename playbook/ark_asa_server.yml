@@ -1,0 +1,28 @@
+- name: Manage ASA service
+  hosts: localhost
+  gather_facts: false
+  become: false
+  vars:
+    asa_user: "{{ lookup('ansible.builtin.env', 'USER') }}"
+    asa_config_path: ".config/ark"
+    asa_config_dir: "{{ lookup('ansible.builtin.env', 'HOME') }}/{{ asa_config_path }}"
+    asa_images_dir: "{{ inventory_dir | default('.') }}/images"
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: setup linger for {{ asa_user }}
+      include_tasks: tasks/loginctl.yml
+    - name: setup configs
+      include_tasks: tasks/config.yml
+    - name: build images
+      include_tasks: tasks/images.yml
+    - name: setup pod
+      include_tasks: tasks/pod.yml
+  handlers:
+    - name: Reload Pod
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+        scope: user
+        state: restarted
+        name: asa-pod
+
