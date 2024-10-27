@@ -15,4 +15,4 @@ esac
 
 ansible-galaxy install -r requirements.yml $ARGS
 
-ansible-playbook ark_asa_server.yml "$@" 
+ansible-playbook arkserver.yml "$@" 

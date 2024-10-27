@@ -18,11 +18,3 @@
   ansible.builtin.template:
     src: maps.env
     dest: "{{ asa_config_dir }}"
-
-- name: Copy environment for each configured map
-  ansible.builtin.template:
-    src: map.env
-    dest: "{{ asa_config_dir }}/{{ item.name | default(item.map) | regex_replace('_(WP|wp)', '') | regex_replace('([A-Z])', '_\\1') | regex_replace('^_', '') | lower }}.env"
-  loop: "{{ asa_maps }}"
-  loop_control:
-    index_var: idx

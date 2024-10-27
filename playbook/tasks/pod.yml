@@ -35,28 +35,11 @@
     pod: asa.pod
   notify: Reload Pod
 
-- name: arkserver container {{ item }}
-  containers.podman.podman_container:
-    name: "{{ item.name | default(item.map) | regex_replace('_(WP|wp)', '') | regex_replace('([A-Z])', '_\\1') | regex_replace('^_', '') | lower }}2"
-    image: localhost/kafka/arkserver
-    state: quadlet
-    quadlet_options: |
-      [Unit]
-      Description=Ark ASA Server Map {{ item.name | default(item.map) | regex_replace('_(WP|wp)', '') }}
-      After=steamcmd2.service
-      Wants=steamcmd2.service
-    detach: true
-    env_file:
-      - "%h/{{ asa_config_path }}/image.env"
-      - "%h/{{ asa_config_path }}/maps.env"
-      - "%h/{{ asa_config_path }}/{{ item.name | default(item.map) | regex_replace('_(WP|wp)', '') | regex_replace('([A-Z])', '_\\1') | regex_replace('^_', '') | lower }}.env"
-    volumes:
-      - "%h/maps/the_island/ShooterGame/Saved/Config/WindowsServer:/opt/arkserver/ShooterGame/Saved/Config/WindowsServer"
-      - "%h/ark_backup:/var/backups/arkserver"
-    sdnotify: container
-    pod: asa.pod
-  notify: Reload Pod
+- name: Create arkserver container one per map
   loop: "{{ asa_maps }}"
+  loop_control:
+    index_var: idx
+  ansible.builtin.include_tasks: map.yml
 
 - name: ensure ark asa server started
   ansible.builtin.systemd_service:

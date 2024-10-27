@@ -8,8 +8,66 @@ asa_max_player: 10
 #asa_server_password: xx
 asa_admin_password: aa
 
+asa_ini_files:
+  Game.ini: |
+    [/script/shootergame.shootergamemode]
+    bUseSingleplayerSettings=True
+    MatingIntervalMultiplier=0.25
+    EggHatchSpeedMultiplier=3.000000
+
+  GameUserSetting.ini: |
+    [ServerSettings]
+    HarvestAmountMultiplier=3.5
+    
+    [/Script/ShooterGame.ShooterGameUserSettings]
+    MatingIntervalMultiplier=0.15
+    EggHatchSpeedMultiplier=5.000000
+    bAllowCustomRecipes=True
+    
+    [AwesomeTeleporters]
+    AllowLastRemoteLocation=True
+    AllowTeleportingToPlayers=True
+    AllowTeleportingToObelisks=True
+    AllowTeleportersOnSaddles=True
+    TeleportersAreTransmitters=False
+    AllowTeleportingOutOfPreventionZones=True
+    AllowCorpseFinder=True
+    CorpseRequiresRemote=True
+    AllowFindDinos=False
+    MeshDetection=True
+    BubbleDuration=5
+    AllowTeleportingIntoPreventionZones=True
+
+    [EasyMutations]
+    MaxMutationStacks=1
+
+
 asa_mods:
-  935408: "desc"
+  # ModID from 
+  935408: "Der Dino Finder"
+  935528: "Visual Storage"
+  970540: "Paleo ARK - Evolution"
+  929800: "TG Stacking Mod 1000-50"
+  928708: "Custom Dino Levels"
+  929543: "Imbue and Upgrade Station"
+  # 933731: "Easy Honey Hive"
+  928603: "Easy Mutations"
+  941697: "Better Breeding"
+  939228: "QoL+"
+  # 928825: "Advanced Fishing Bait"
+  928621: "Utilities Plus"
+  # 930684: "Dino Mindwipe"
+  947033: "Awesome Spyglass!"
+  932225: "Mouse Saver"
+  # 930128: "Klinger Additional Boats"
+  942024: "Dino Depot"
+  950914: "Awesome Teleporters!"
+  930025: "Explorer Notes Tracker"
+  983782: "Dear Jane"
+  931047: "AutoDoors"
+  1013683: "Healthy Feeding Troughs"
+  972484: "Paleo ARK EVO+"
+  934401: "Electric Power Amplifier"
 
 asa_extra_opts:
   - ServerCrosshair=true

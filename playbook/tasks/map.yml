@@ -1,0 +1,46 @@
+---
+
+- name: "Set variables for {{ item.map }}"
+  ansible.builtin.set_fact:
+    name: "{{ item.name | default(item.map) | regex_replace('_(WP|wp)', '') }}"
+    map: "{{ item.name | default(item.map) | regex_replace('_(WP|wp)', '') | regex_replace('([A-Z])', '_\\1') | regex_replace('^_', '') | lower }}"
+
+- name: "Copy environment file {{ map }}.env"
+  ansible.builtin.template:
+    src: map.env
+    dest: "{{ asa_config_dir }}/{{ map }}.env"
+
+- name: "Create ARK Config directory {{ name }}"
+  ansible.builtin.file:
+    path: "{{ asa_config_dir }}/{{ map }}"
+    state: directory
+
+- name: "Create ini files for {{ name }}"
+  ansible.builtin.copy:
+    dest: "{{ asa_config_dir }}/{{ map }}/{{ ini_item.key }}"
+    content: "{{ ini_item.value }}"
+  loop: "{{ asa_ini_files | dict2items }}"
+  loop_control:
+    loop_var: ini_item
+    
+- name: arkserver container {{ name }}
+  containers.podman.podman_container:
+    name: "{{ map }}2"
+    image: localhost/kafka/arkserver
+    state: quadlet
+    quadlet_options: |
+      [Unit]
+      Description=Ark ASA Server Map {{ name }}
+      After=steamcmd2.service
+      Wants=steamcmd2.service
+    detach: true
+    env_file:
+      - "%h/{{ asa_config_path }}/image.env"
+      - "%h/{{ asa_config_path }}/maps.env"
+      - "%h/{{ asa_config_path }}/{{ map }}.env"
+    volumes:
+      - "%h/{{ asa_config_path }}/{{ map }}:/opt/arkserver/ShooterGame/Saved/Config/WindowsServer"
+      - "%h/ark_backup:/var/backups/arkserver"
+    sdnotify: container
+    pod: asa.pod
+  notify: Reload Pod
