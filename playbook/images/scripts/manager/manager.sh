@@ -182,6 +182,8 @@ status() {
 
     echo -e "    ${ark_port}"
 
+    # TODO first wait for the rcon port via
+    #      ss -tpln | grep 0.0.0.0:${RCON_PORT} 
     # Check initial status with rcon command
     out=$(${RCON_CMDLINE[@]} ListPlayers 2>/dev/null)
     res=$?

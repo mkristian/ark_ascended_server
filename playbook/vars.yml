@@ -15,7 +15,7 @@ asa_ini_files:
     MatingIntervalMultiplier=0.25
     EggHatchSpeedMultiplier=3.000000
 
-  GameUserSetting.ini: |
+  GameUserSettings.ini: |
     [ServerSettings]
     HarvestAmountMultiplier=3.5
     
@@ -46,7 +46,8 @@ asa_mods:
   # ModID from 
   935408: "Der Dino Finder"
   935528: "Visual Storage"
-  970540: "Paleo ARK - Evolution"
+  # fails to start the server with this:
+  #  970540: "Paleo ARK - Evolution"
   929800: "TG Stacking Mod 1000-50"
   928708: "Custom Dino Levels"
   929543: "Imbue and Upgrade Station"

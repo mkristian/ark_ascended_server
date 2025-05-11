@@ -13,14 +13,12 @@
       WantedBy=default.target
     network: host
     volumes:
-      - steam2_data:/opt/steamcmd:z
-      - shared2_cluster:/opt/cluster:z
-      - server2_data:/opt/server:z
-  notify: Reload Pod
+      - shared_cluster:/opt/cluster:z
+  notify: Restart Pod
 
 - name: steamcmd container
   containers.podman.podman_container:
-    name: steamcmd2
+    name: steamcmd
     image: localhost/kafka/steamcmd2
     state: quadlet
     quadlet_options: | 
@@ -28,12 +26,18 @@
       Notify=true
       [Unit]
       Description=Steam CMD
+      [Service]
+      TimeoutStartSec=7200
+      TimeoutStopSec=70
     # TODO init_ctr: always
     detach: true
+    volumes:
+      - steam_data:/opt/steamcmd:z
+      - server_data:/opt/server:z
     env_file:
-      - "%h/maps/env"
+      - "%h/{{ asa_config_dir }}/steamcmd.env"
     pod: asa.pod
-  notify: Reload Pod
+  notify: Restart Pod
 
 - name: Create arkserver container one per map
   loop: "{{ asa_maps }}"

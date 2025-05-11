@@ -4,17 +4,17 @@
     path: "{{ asa_config_dir }}"
     state: directory
 
-- name: Copy shared environment for all images
+- name: Copy shared environment
   ansible.builtin.copy:
-    src: image.env
+    src: "{{ item }}"
     dest: "{{ asa_config_dir }}"
+  loop:
+    - image.env
+    - steamcmd.env
+  notify: Restart Pod
 
 - name: Copy environment for all maps
   ansible.builtin.template:
     src: maps.env
     dest: "{{ asa_config_dir }}"
-
-- name: Copy environment for all maps
-  ansible.builtin.template:
-    src: maps.env
-    dest: "{{ asa_config_dir }}"
+  notify: Restart Pod

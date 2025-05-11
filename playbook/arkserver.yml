@@ -19,7 +19,7 @@
     - name: setup pod
       include_tasks: tasks/pod.yml
   handlers:
-    - name: Reload Pod
+    - name: Restart Pod
       ansible.builtin.systemd_service:
         daemon_reload: true
         scope: user
