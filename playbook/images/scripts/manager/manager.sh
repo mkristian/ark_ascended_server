@@ -12,9 +12,7 @@ __="\033[0m"
 
 RCON_CMDLINE=( rcon -a 127.0.0.1:${RCON_PORT} -p ${ARK_ADMIN_PASSWORD} )
 EOS_FILE=/opt/manager/.eos.config
-MAP_NAME=$(eval echo "$MAP_NAME")
-SESSION_NAME=$(eval echo "$SESSION_NAME")
-path="/var/backups/arkserver/${SESSION_NAME// /_}/${SERVER_MAP}"
+path="/var/backups/arkserver/${CLUSTER_ID}/${MAP_ID}"
 state=$path/running
 mkdir -p $path
 

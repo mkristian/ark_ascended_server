@@ -35,8 +35,7 @@
       - steam_data:/opt/steamcmd:z
       - server_data:/opt/server:z
     env_file:
-      #- "%h/{{ asa_config_dir }}/steamcmd.env"
-      - "{{ asa_config_dir }}/steamcmd.env"
+      - "%h/{{ asa_config_path }}/steamcmd.env"
     pod: asa.pod
   notify: Restart Pod
 

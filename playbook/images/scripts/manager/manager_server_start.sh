@@ -2,7 +2,6 @@
 # This file is called by manager.sh to start a new instance of ASA
 
 # Server main options
-SESSION_NAME=$(eval echo "$SESSION_NAME")
 cmd="${SERVER_MAP}?listen?SessionName=\"${SESSION_NAME}\"?Port=${SERVER_PORT}"
 if [ -n "${MAX_PLAYERS}" ]; then
     cmd="${cmd}?MaxPlayers=${MAX_PLAYERS}"
@@ -41,7 +40,6 @@ if [ -n "${MAX_PLAYERS}" ]; then
 fi
 
 if [ -n "${CLUSTER_ID}" ]; then
-    CLUSTER_ID=$(eval echo "$CLUSTER_ID")
     ark_flags="${ark_flags} -clusterID=${CLUSTER_ID} -ClusterDirOverride=/opt/cluster"
 fi
 
