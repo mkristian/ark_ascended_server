@@ -3,6 +3,8 @@
   gather_facts: false
   become: false
   vars:
+    #APPID should only be changed if Wildcard provides a new one
+    asa_appid: 2430930
     asa_user: "{{ lookup('ansible.builtin.env', 'USER') }}"
     asa_config_path: ".config/ark"
     asa_config_dir: "{{ lookup('ansible.builtin.env', 'HOME') }}/{{ asa_config_path }}"
@@ -12,8 +14,8 @@
   tasks:
     - name: setup linger for {{ asa_user }}
       include_tasks: tasks/loginctl.yml
-    - name: setup configs
-      include_tasks: tasks/config.yml
+    - name: setup env files under .config
+      include_tasks: tasks/env_files.yml
     - name: build images
       include_tasks: tasks/images.yml
     - name: setup pod

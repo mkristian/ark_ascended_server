@@ -48,9 +48,8 @@ fi
 ark_flags="${ark_flags} ${ARK_EXTRA_DASH_OPTS}"
 
 #fix for docker compose exec / docker exec parsing inconsistencies
-STEAM_COMPAT_DATA_PATH=$(eval echo "$STEAM_COMPAT_DATA_PATH")
 mkdir -p $STEAM_COMPAT_DATA_PATH
 
 #starting server and outputting log file
-echo "/opt/arkserver/ShooterGame/Binaries/Win64/ArkAscendedServer.exe ${cmd} ${ark_flags}" >> $LOG_FILE
-proton run /opt/arkserver/ShooterGame/Binaries/Win64/ArkAscendedServer.exe ${cmd} ${ark_flags} >> $LOG_FILE 2>&1
+echo "proton run /opt/arkserver/ShooterGame/Binaries/Win64/ArkAscendedServer.exe ${cmd} ${ark_flags}"
+proton run /opt/arkserver/ShooterGame/Binaries/Win64/ArkAscendedServer.exe ${cmd} ${ark_flags} 2>&1 | tee -a $LOG_FILE

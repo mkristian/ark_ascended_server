@@ -1,6 +1,6 @@
 ---
 
-- name: Collect info on images
+- name: collect info on images
   containers.podman.podman_image_info:
     name:
       - localhost/kafka/steamcmd2
@@ -8,12 +8,13 @@
   ignore_errors: true
   register: info
 
-- name: Pick created timestamps
+- name: pick created timestamps
   ansible.builtin.set_fact:
     first: "{{ info.images[0].Created | regex_replace('\\..*', '') | to_datetime('%Y-%m-%dT%H:%M:%S') }}"
     second: "{{ info.images[1].Created | regex_replace('\\..*', '') | to_datetime('%Y-%m-%dT%H:%M:%S') }}"
 - debug:
     msg: "-{{ (now() - (first if first < second else second) | to_datetime).seconds }} {{ first if first < second else second }}"
+
 - name: find modified files
   ansible.builtin.find:
     path: "{{ asa_images_dir }}"
