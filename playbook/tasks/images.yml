@@ -37,3 +37,4 @@
     force: "{{ files.files | length > 0 }}"
     build:
       file: Containerfile.arkserver
+  notify: Restart Pod

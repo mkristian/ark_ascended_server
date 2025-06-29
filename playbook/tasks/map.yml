@@ -8,7 +8,7 @@
 - name: "Copy environment file {{ map }}.env"
   ansible.builtin.template:
     src: map.env
-    dest: "{{ asa_config_dir }}/{{ map }}.env"
+    dest: "{{ asa_config_dir }}/{{ map }}/{{ map }}.env"
   notify: Restart Pod
 
 - name: "Create ARK Config directory {{ name }}"
@@ -38,7 +38,7 @@
     env_file:
       - "%h/{{ asa_config_path }}/image.env"
       - "%h/{{ asa_config_path }}/maps.env"
-      - "%h/{{ asa_config_path }}/{{ map }}.env"
+      - "%h/{{ asa_config_path }}/{{ map }}/{{ map }}.env"
     volumes:
       - server_data:/opt/arkserver:z
       - "%h/{{ asa_config_path }}/{{ map }}:/opt/arkserver/ShooterGame/Saved/Config/WindowsServer"
