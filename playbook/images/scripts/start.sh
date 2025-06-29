@@ -3,8 +3,10 @@
 #exit on error
 set -e
 
+LOG=/opt/arkserver/ShooterGame/Saved/Logs/ShooterGame.log
+
 #Create file for showing server logs
-mkdir -p "${LOG_FILE%/*}" && touch "${LOG_FILE}"
+mkdir -p "${LOG%/*}" && touch "${LOG}"
 
 # Start server through manager
 manager resume
@@ -20,7 +22,5 @@ fi
 # Start tail process in the background, then wait for tail to finish.
 # This is just a hack to catch SIGTERM signals, tail does not forward
 # the signals.
-tail -F "${LOG_FILE}" &
+tail -n 0 -F "${LOG}" | sed -e "s/^/\x1B[0;1;34m$CLUSTER_ID \x1B[0;1;33m$MAP_NAME\x1B[0m\ /" &
 wait $!
-
-#sleep infinity #& wait

@@ -4,7 +4,7 @@ SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 source $SCRIPT_DIR/common.env
 
-podman() {
+podcmd() {
   local map=$1
   local cmd=$2
   log $cmd
@@ -27,14 +27,14 @@ else
     fi
     case $cmd in
       start)
-        podman $map start
+        podcmd $map start
         touch $IS_RUNNING
         source $SCRIPT_DIR/common.env
         show | grep -v not
         ;;
 
       stop)
-        podman $map stop
+        podcmd $map stop
         rm -f $IS_RUNNING
         source $SCRIPT_DIR/common.env
         show | grep -v not
