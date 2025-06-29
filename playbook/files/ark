@@ -1,0 +1,44 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+
+source $SCRIPT_DIR/common.env
+
+podman() {
+  local map=$1
+  local cmd=$2
+  log $cmd
+  podman exec -t $map manager $cmd
+}
+
+if [[ -z $1 ]]
+then
+  show | grep -v not
+else
+  cmd=$1
+  shift
+  for map in ${1:-$ALL}
+  do
+    state $map
+    if [[ ! -f $IN_CLUSTER ]]
+    then
+      log "${_R}is not in cluster$__"
+      exit 321
+    fi
+    case $cmd in
+      start)
+        podman $map start
+        touch $IS_RUNNING
+        source $SCRIPT_DIR/common.env
+        show | grep -v not
+        ;;
+
+      stop)
+        podman $map stop
+        rm -f $IS_RUNNING
+        source $SCRIPT_DIR/common.env
+        show | grep -v not
+        ;;
+    esac
+  done
+fi

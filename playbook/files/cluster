@@ -1,0 +1,29 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+
+source $SCRIPT_DIR/common.env
+
+if [[ -z $1 ]]
+then
+  show
+else
+  cmd=$1
+  shift
+  case $cmd in
+    add)
+      fail_on_max
+      state $1
+      touch $IN_CLUSTER 
+      source $SCRIPT_DIR/common.env
+      show
+      ;;
+
+    remove)
+      state $1
+      rm -f $IN_CLUSTER
+      source $SCRIPT_DIR/common.env
+      show
+      ;;
+  esac
+fi

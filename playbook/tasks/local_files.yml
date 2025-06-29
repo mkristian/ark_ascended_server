@@ -1,8 +1,11 @@
 ---
-- name: Ensure config directory eists
+- name: Ensure directories
   ansible.builtin.file:
-    path: "{{ asa_config_dir }}"
+    path: "{{ item }}"
     state: directory
+  loop:
+    - "{{ asa_config_dir }}"
+    - "{{ asa_bin_dir }}"
 
 - name: Copy shared environment
   ansible.builtin.template:
@@ -14,3 +17,8 @@
     - maps.env
     - manager.env
   notify: Restart Pod
+
+- name: Copy local bin files
+  ansible.builtin.copy:
+    src: '../files/'
+    dest: "{{ asa_bin_dir }}"

@@ -7,7 +7,9 @@
     asa_appid: 2430930
     asa_user: "{{ lookup('ansible.builtin.env', 'USER') }}"
     asa_config_path: ".config/ark"
-    asa_config_dir: "{{ lookup('ansible.builtin.env', 'HOME') }}/{{ asa_config_path }}"
+    asa_home_dir: "{{ lookup('ansible.builtin.env', 'HOME') }}"
+    asa_config_dir: "{{ asa_home_dir }}/{{ asa_config_path }}"
+    asa_bin_dir: "{{ asa_home_dir }}/bin"
     asa_images_dir: "{{ inventory_dir | default('.') }}/images"
   vars_files:
     - vars.yml
@@ -15,7 +17,7 @@
     - name: setup linger for {{ asa_user }}
       include_tasks: tasks/loginctl.yml
     - name: setup env files under .config
-      include_tasks: tasks/env_files.yml
+      include_tasks: tasks/local_files.yml
     - name: build images
       include_tasks: tasks/images.yml
     - name: setup pod
