@@ -17,28 +17,26 @@ then
 else
   cmd=$1
   shift
-  for map in ${1:-$ALL}
+  echo -e "$_B$CLUSTER_ID"
+  for map in ${1:-$(all)}
   do
     state $map
     if [[ ! -f $IN_CLUSTER ]]
     then
       log "${_R}is not in cluster$__"
-      exit 321
-    fi
-    case $cmd in
-      start)
-        podcmd $map start
-        touch $IS_RUNNING
-        source $SCRIPT_DIR/common.env
-        show | grep -v not
-        ;;
+    else
+      case $cmd in
+        start) # start ark server
+          podcmd $map start
+          touch $IS_RUNNING
+          ;;
 
-      stop)
-        podcmd $map stop
-        rm -f $IS_RUNNING
-        source $SCRIPT_DIR/common.env
-        show | grep -v not
-        ;;
-    esac
+        stop) # stop ark server
+          podcmd $map stop
+          rm -f $IS_RUNNING
+          ;;
+      esac
+    fi
   done
+  show | grep -v not
 fi

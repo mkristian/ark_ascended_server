@@ -9,6 +9,7 @@ asa_max_player: 10
 #asa_server_password: xx
 asa_admin_password: aa
 
+# https://ark.wiki.gg/wiki/Server_configuration#Configuration_Files
 asa_ini_files:
   Game.ini: |
     [/script/shootergame.shootergamemode]

@@ -5,20 +5,25 @@
     name: "{{ item.name | default(item.map) | regex_replace('_(WP|wp)', '') }}"
     map: "{{ item.name | default(item.map) | regex_replace('_(WP|wp)', '') | regex_replace('([A-Z])', '_\\1') | regex_replace('^_', '') | lower }}"
 
+- name: "More variables {{ item.map }}"
+  ansible.builtin.set_fact:
+    map_dir: "{{ asa_config_dir }}/{{ map }}"
+    map_config_dir: "{{ asa_config_dir }}/{{ map }}/Saved/Config/WindowsServer"
+
 - name: "Copy environment file {{ map }}.env"
   ansible.builtin.template:
     src: map.env
-    dest: "{{ asa_config_dir }}/{{ map }}/{{ map }}.env"
+    dest: "{{ map_dir }}/{{ map }}.env"
   notify: Restart Pod
 
 - name: "Create ARK Config directory {{ name }}"
   ansible.builtin.file:
-    path: "{{ asa_config_dir }}/{{ map }}"
+    path: "{{ map_config_dir }}"
     state: directory
 
 - name: "Create ini files for {{ name }}"
   ansible.builtin.copy:
-    dest: "{{ asa_config_dir }}/{{ map }}/{{ ini_item.key }}"
+    dest: "{{ map_config_dir }}/{{ ini_item.key }}"
     content: "{{ ini_item.value }}"
   loop: "{{ asa_ini_files | dict2items }}"
   loop_control:
@@ -41,7 +46,7 @@
       - "%h/{{ asa_config_path }}/{{ map }}/{{ map }}.env"
     volumes:
       - server_data:/opt/arkserver:z
-      - "%h/{{ asa_config_path }}/{{ map }}:/opt/arkserver/ShooterGame/Saved/Config/WindowsServer"
+      - "%h/{{ asa_config_path }}/{{ map }}/Saved:/opt/arkserver/ShooterGame/Saved"
       - "%h/ark_backup:/var/backups/arkserver"
     sdnotify: container
     pod: asa.pod
