@@ -202,6 +202,10 @@ status() {
     fi
 }
 
+log() {
+    echo -e "$_B$CLUSTER_ID$__ $_Y$MAP_NAME$__ $*"
+}
+
 start() {
     # Check server not already running
     ark_pid=$(get_and_check_pid)

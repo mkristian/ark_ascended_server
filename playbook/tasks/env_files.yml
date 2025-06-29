@@ -12,4 +12,5 @@
     - image.env
     - steamcmd.env
     - maps.env
+    - manager.env
   notify: Restart Pod

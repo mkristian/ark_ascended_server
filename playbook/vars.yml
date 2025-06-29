@@ -1,6 +1,7 @@
 ---
 
 asa_cluster_id: Drachen
+asa_cluster_max_size: 2
 
 asa_max_player: 10
 
@@ -83,9 +84,11 @@ asa_extra_dash_opts:
   - AllowRaidDinoFeeding=true
   - ActiveEvent=Summer
 
+# https://ark.wiki.gg/wiki/Server_configuration#Maps
 asa_maps:
   - map: TheIsland_WP
-  - map: thecenter_wp
-    name: TheCenter
+  - map: TheCenter_WP
   - map: ScorchedEarth_WP
   - map: Aberration_WP
+  - map: Extinction_WP
+  - map: Ragnarok_WP

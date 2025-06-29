@@ -50,4 +50,5 @@ mkdir -p $STEAM_COMPAT_DATA_PATH
 
 #starting server and outputting log file
 echo "proton run /opt/arkserver/ShooterGame/Binaries/Win64/ArkAscendedServer.exe ${cmd} ${ark_flags}"
-proton run /opt/arkserver/ShooterGame/Binaries/Win64/ArkAscendedServer.exe ${cmd} ${ark_flags} 2>&1 | tee -a $LOG_FILE
+proton run /opt/arkserver/ShooterGame/Binaries/Win64/ArkAscendedServer.exe ${cmd} ${ark_flags}
+tail -f /opt/arkserver/ShooterGame/Saved/Logs/ShooterGame.log | sed -e "s/^/\x1B[0;1;33m$CLUSTER_ID\x1B[0m\ /" >> $LOG_FILE
