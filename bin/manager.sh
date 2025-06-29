@@ -14,7 +14,7 @@ __="\033[0m"
 
 scriptdir="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 basedir=$(realpath "$scriptdir/..")
-mapsdir="$basedir/maps"
+mapsdir="$basedir/.config/ark"
 
 map() {
   if [[ -z $1 ]]
@@ -23,9 +23,9 @@ map() {
     exit 123
   fi
   local map=$1
-  if [[ ! -f "$mapsdir/$map/env" ]]
+  if [[ ! -f "$mapsdir/$map.env" ]]
   then
-    echo -e "$_R$mapsdir/$map/env$__ does not exists"
+    echo -e "$_R$mapsdir/$map.env$__ does not exists"
     echo "usage: $0 $cmd <map name>"
     exit 123
   fi
@@ -41,8 +41,8 @@ manager() {
   podman exec -t $map manager $cmd
 }
 
-source "$mapsdir/env"
-all=$(ls -d1 maps/* | grep -v env | sed 's/maps.//' | xargs echo)
+source "$mapsdir/manager.env"
+all=$(find .config/ark/* -type d | sed s/.*ark.// | xargs echo)
 cmd=$1
 shift
 
